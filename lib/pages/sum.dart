@@ -10,6 +10,7 @@ class Sum extends StatefulWidget {
 class _SumState extends State<Sum> {
   final TextEditingController _controller = TextEditingController();
   double totalSum = 0.0;
+  int digitCount = 0;
 
   void calculateSum() {
     String inputText = _controller.text;
@@ -19,6 +20,15 @@ class _SumState extends State<Sum> {
         .allMatches(inputText)
         .map((match) => match.group(0)!)
         .toList();
+
+    digitCount = RegExp(r'\d').allMatches(inputText).length;
+
+    if (numbers.isEmpty) {
+    setState(() {
+      totalSum = 0.0; 
+    });
+    return; 
+  }
 
     // Convert numbers to double and sum them up
     double sum = numbers.map((num) => double.tryParse(num) ?? 0).reduce((a, b) => a + b);
@@ -58,6 +68,11 @@ class _SumState extends State<Sum> {
             const SizedBox(height: 20),
             Text(
               "Total Jumlah Angka: $totalSum",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color.fromRGBO(251, 180, 72, 1),),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Jumlah Digit Angka: $digitCount",
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color.fromRGBO(251, 180, 72, 1),),
             ),
           ],

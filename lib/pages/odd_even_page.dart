@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OddEvenPage extends StatefulWidget {
   const OddEvenPage({super.key});
@@ -12,7 +13,7 @@ class _OddEvenPageState extends State<OddEvenPage> {
   String _result = "";
 
   void _checkOddEven() {
-    String input = _numberController.text;
+    String input = _numberController.text.trim();
     if (input.isEmpty) {
       setState(() {
         _result = "Please enter a number";
@@ -20,32 +21,17 @@ class _OddEvenPageState extends State<OddEvenPage> {
       return;
     }
 
-    int number = int.parse(input);
-
-    if (!RegExp(r'^-?\d+\$').hasMatch(input) || input.length > 9) {
+    if (!RegExp(r'^-?\d{1,9}$').hasMatch(input) || input.length > 9) {
       setState(() {
         _result = "Invalid input! Enter a whole number (max 9 digits).";
       });
       return;
-    } else {
-      setState(() {
-      _result = number % 2 == 0 ? "Even" : "Odd";
-    });
     }
 
-    
-    
-
-    // int? number = int.tryParse(_numberController.text);
-    // if (number == null) {
-    //   setState(() {
-    //     _result = "Please enter a valid number";
-    //   });
-    // } else {
-    //   setState(() {
-    //     _result = number % 2 == 0 ? "Even" : "Odd";
-    //   });
-    // }
+    int number = int.parse(input);
+    setState(() {
+      _result = number % 2 == 0 ? "Even" : "Odd";
+    });
   }
 
   @override
@@ -67,9 +53,14 @@ class _OddEvenPageState extends State<OddEvenPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Padding(padding: EdgeInsets.only(bottom: 10),
+              child: Text("Input number max 9 digits"),),
               TextField(
                 controller: _numberController,
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^-?\d{0,9}$')),
+                ],
                 decoration: InputDecoration(
                   labelText: "Number",
                   border: OutlineInputBorder(
